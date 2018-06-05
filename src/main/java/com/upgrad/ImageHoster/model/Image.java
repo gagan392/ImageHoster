@@ -45,6 +45,11 @@ public class Image implements Serializable{
         inverseJoinColumns = { @JoinColumn(name = "tag_id")})
     private List<Tag> tags = new ArrayList<Tag>();
 
+    // Image has OneToMany relationship with an Comment entity, as image can have multiple comments but not single comment on multiple images.
+    // List of Comment entities is not necessary to be loaded, along with an Image entity, for all type of CRUD changes on Image entity. Hence choosing fetchType as LAZY.
+    // This needs a manually step of loading all the comments of an image into the hibernate system.
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "image")
+    private List<Comment> comments = new ArrayList<Comment>();
 
     public Image() { }
 
@@ -108,5 +113,15 @@ public class Image implements Serializable{
 
     public void setTags(List<Tag> tags) { this.tags = tags; }
 
+    public void setId(int id) {
+        this.id = id;
+    }
 
+    public List<Comment> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<Comment> comments) {
+        this.comments = comments;
+    }
 }
