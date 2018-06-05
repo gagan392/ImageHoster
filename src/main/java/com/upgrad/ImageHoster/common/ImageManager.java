@@ -25,47 +25,50 @@ public class ImageManager extends SessionManager {
     }
 
     /**
-     * This method retrieves an image by its title
+     * This method retrieves an image by its id
      *
-     * @param title the title of the image that we are looking for
+     * @param id the id of the image that we are looking for
      *
-     * @return an Image object that we retrieved by its title
+     * @return an Image object that we retrieved by its id
      */
-    public Image getImageByTitle(final String title) {
+    // changed methodname and input param to return image on id
+    public Image getImageById(final int id) {
         Session session = openSession();
 
         try {
             Image image = (Image)session.createCriteria(Image.class)
-                    .add(Restrictions.eq("title", title))
+                    .add(Restrictions.eq("id", id)) // changing the search criteria to id field
                     .uniqueResult(); // retrieves only 1 image
             commitSession(session);
 
             return image;
         } catch(HibernateException e) {
-            System.out.println("unable to retrieve an image from database by its title");
+            System.out.println("unable to retrieve an image from database by its id");
         }
 
         return null;
     }
 
+
     /**
      * This method retrieves an image by its title, as well as the data
      * related to its tags, user, and user's profile photo
      *
-     * @param title the title of the image that we are looking for
+     * @param id the id of the image that we are looking for
      *
      * @return an Image object that we retrieved by its title
      */
-    public Image getImageByTitleWithJoins(final String title) {
+    public Image getImageByIdWithJoins(final int id) {
         Session session = openSession();
 
         try {
             Image image = (Image)session.createCriteria(Image.class)
-                    .add(Restrictions.eq("title", title))
+                    .add(Restrictions.eq("id", id))
                     .uniqueResult();
             Hibernate.initialize(image.getTags()); // doing a join on tags table
             Hibernate.initialize(image.getUser()); // doing a join on user table
             Hibernate.initialize(image.getUser().getProfilePhoto()); // doing a join on profile photo table
+            Hibernate.initialize(image.getComments()); // doing a join on comment table
             commitSession(session);
 
             return image;
@@ -89,8 +92,8 @@ public class ImageManager extends SessionManager {
         try {
             List<Image> images = session
                     .createCriteria(Image.class)
-                    .createAlias("tags", "tags")
-                    .add(Restrictions.eq("tags.name", tagName))
+                    .createAlias("tags", "tagsAlias")
+                    .add(Restrictions.eq("tagsAlias.name", tagName))
                     .list();
 
             commitSession(session);
@@ -122,12 +125,12 @@ public class ImageManager extends SessionManager {
     /**
      * This method deletes an image data from the database
      *
-     * @param title the title of the image that we want to delete
+     * @param id the id of the image that we want to delete
      */
-    public void deleteImage(final String title) {
+    public void deleteImage(final int id) {
         Session session = openSession();
-        Query query = session.createQuery("Delete from " + Image.class.getName() + " where title=:imageTitle");
-        query.setParameter("imageTitle", title);
+        Query query = session.createQuery("Delete from " + Image.class.getName() + " where id=:id");
+        query.setParameter("id", id);
         query.executeUpdate();
         commitSession(session);
     }
@@ -137,10 +140,11 @@ public class ImageManager extends SessionManager {
      *
      * @param image the Image who's data that we want to save to the database
      */
-    public void saveImage(final Image image) {
+    public int saveImage(final Image image) {
         Session session = openSession();
-        session.save(image);
+        Integer id = (Integer) session.save(image);
         commitSession(session);
+        return id;
     }
 
     /**

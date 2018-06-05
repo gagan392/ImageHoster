@@ -13,12 +13,14 @@
             <legend class="f2 fw6 ph0 mh0">Sign up for an account</legend>
             <div class="mt3">
                 <label class="db fw6 lh-copy f6" for="username">Username</label>
-                <input class="pa2 input-reset ba w-100" type="text" name="username" id="username">
+                <!-- added minlength constraint which might not be supported by all browsers. Hence need validation at server end also. -->
+                <input class="pa2 input-reset ba w-100" type="text" name="username" id="username" minlength="6">
                 <p class="f6 red mt1" th:if="${errors != null and errors.get('username') != null}" th:text="${errors.get('username')}"></p>
             </div>
             <div class="mt3">
                 <label class="db fw6 lh-copy f6" for="password">Password</label>
-                <input class="pa2 input-reset ba w-100" type="password" name="password" id="password">
+                <!-- added minlength constraint which might not be supported by all browsers. Hence need validation at server end also. -->
+                <input class="pa2 input-reset ba w-100" type="password" name="password" id="password" minlength="6">
                 <p class="f6 red mt1" th:if="${errors != null and errors.get('password') != null}" th:text="${errors.get('password')}"></p>
             </div>
         </fieldset>

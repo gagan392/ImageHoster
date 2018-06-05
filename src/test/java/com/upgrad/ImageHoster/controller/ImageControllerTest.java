@@ -99,7 +99,7 @@ public class ImageControllerTest {
         image.setUploadDate(LocalDate.now());
 
         // setup the mock imageService to return the mock image as a List<Image>;
-        Mockito.when(imageService.getByTitleWithJoin(Mockito.anyString())).thenReturn(image);
+        Mockito.when(imageService.getByIdWithJoin(Mockito.anyInt())).thenReturn(image);
 
         // checks to see if the returned view contains the title of the image
         this.mockMvc.perform(get("/images/someImageTitle"))
@@ -153,7 +153,7 @@ public class ImageControllerTest {
 
         // setup the mock imageService to return an Image when trying
         // to retrieve an image by some image title;
-        Mockito.when(imageService.getByTitle(Mockito.anyString())).thenReturn(new Image());
+        Mockito.when(imageService.getById(Mockito.anyInt())).thenReturn(new Image());
 
         // checks to see if we are redirected to the home page once we delete an image
         this.mockMvc.perform(get("/images/someImageTitle/delete").session(session))
@@ -181,7 +181,7 @@ public class ImageControllerTest {
 
         // setup the mock imageService to return the mock image when
         // trying to retrieve an image by its title
-        Mockito.when(imageService.getByTitleWithJoin(Mockito.anyString())).thenReturn(image);
+        Mockito.when(imageService.getByIdWithJoin(Mockito.anyInt())).thenReturn(image);
 
         // checks to see if the returned HTML contains:
         // 1) Edit Image
@@ -209,7 +209,7 @@ public class ImageControllerTest {
 
         // setup the mock imageService to return the mock image when trying to retreive
         // an image by its title
-        Mockito.when(imageService.getByTitleWithJoin(Mockito.anyString())).thenReturn(new Image());
+        Mockito.when(imageService.getByIdWithJoin(Mockito.anyInt())).thenReturn(new Image());
 
         // checks to see if we redirect to the URL of the edited image
         this.mockMvc.perform(multipart("/upload")
