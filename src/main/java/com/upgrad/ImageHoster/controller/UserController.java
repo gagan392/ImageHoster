@@ -210,7 +210,10 @@ public class UserController {
         // update photo data
         ProfilePhoto photo = currUser.getProfilePhoto();
         String photoDataAsBase64 = convertUploadedFileToBase64(file);
-        photo.setprofileImageData(photoDataAsBase64);
+        if (!photoDataAsBase64.isEmpty())
+            photo.setprofileImageData(photoDataAsBase64);
+        else
+            photo.setprofileImageData(photo.getProfileImageData());
         profilePhotoService.update(photo);
 
         // update user data

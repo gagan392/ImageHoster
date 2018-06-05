@@ -19,8 +19,8 @@
             </div>
 
             <div class="mt3">
-                <label class="db fw6 lh-copy f6" for="disabledTitle">Title</label>
-                <input class="gray bg-light-gray pa2 input-reset ba w-100" type="text" name="disabledTitle" id="disabledTitle" th:value="${image.title}" disabled />
+                <label class="db fw6 lh-copy f6" for="title">Title</label>
+                <input class="pa2 input-reset ba w-100" type="text" name="title" id="title" th:value="${image.title}" />
             </div>
             <div class="mt3">
                 <label class="db fw6 lh-copy f6" for="description">Description</label>
@@ -35,7 +35,6 @@
                 <input class="pa2 input-reset ba w-100" type="text" name="tags" id="tags" th:value="${tags}">
                 <p>Multiple tags are allowed. Please separate tags by "," such as labrador, dog, yellow </p>
             </div>
-            <input class="pa2 input-reset ba w-100" type="hidden" name="title" id="title" th:value="${image.title}" />
         </fieldset>
         <div class="">
             <input class="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib" type="submit" value="Edit" />
