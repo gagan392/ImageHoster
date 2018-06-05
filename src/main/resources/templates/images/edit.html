@@ -11,6 +11,13 @@
     <form method="POST" enctype="multipart/form-data" action="/editImage" class="measure center">
         <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
             <legend class="f2 fw6 ph0 mh0">Edit image</legend>
+
+            <!-- Added id field to send it as part of request object -->
+            <div class="mt3">
+                <label class="db fw6 lh-copy f6" for="disabledId">Id</label>
+                <input class="gray bg-light-gray pa2 input-reset ba w-100" type="text" name="id" id="disabledId" th:value="${image.id}" />
+            </div>
+
             <div class="mt3">
                 <label class="db fw6 lh-copy f6" for="disabledTitle">Title</label>
                 <input class="gray bg-light-gray pa2 input-reset ba w-100" type="text" name="disabledTitle" id="disabledTitle" th:value="${image.title}" disabled />

@@ -30,7 +30,8 @@
                 <div class="aspect-ratio aspect-ratio--1x1">
                     <img class="db bg-center cover aspect-ratio--object" th:style="'background:url(data:image/jpeg;base64,'+${image.imageFile} + ');'" />
                 </div>
-                <a th:href="'/images/' + ${image.title}" class="ph2 ph0-ns link db">
+                <!-- passing id instead of title of an image to get details that image -->
+                <a th:href="'/images/' + ${image.id}" class="ph2 ph0-ns link db">
                     <h3 class="f5 f4-ns mb0 black-90 link hover blue" th:text="${image.title}">Title of piece</h3>
                 </a>
                 <h3 class="f6 f5 fw4 mt2 black-60" th:text="${image.uploadDate}">Subtitle of piece</h3>

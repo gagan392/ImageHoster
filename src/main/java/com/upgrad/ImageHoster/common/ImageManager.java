@@ -31,12 +31,13 @@ public class ImageManager extends SessionManager {
      *
      * @return an Image object that we retrieved by its title
      */
-    public Image getImageByTitle(final String title) {
+    // changed method name and input param to return image specific to image id
+    public Image getImageById(final int id) {
         Session session = openSession();
 
         try {
             Image image = (Image)session.createCriteria(Image.class)
-                    .add(Restrictions.eq("title", title))
+                    .add(Restrictions.eq("id", id)) // changing the search criteria to id field
                     .uniqueResult(); // retrieves only 1 image
             commitSession(session);
 
@@ -56,12 +57,13 @@ public class ImageManager extends SessionManager {
      *
      * @return an Image object that we retrieved by its title
      */
-    public Image getImageByTitleWithJoins(final String title) {
+    // changed method name and input param to return image specific to image id
+    public Image getImageByIdWithJoins(final int id) {
         Session session = openSession();
 
         try {
             Image image = (Image)session.createCriteria(Image.class)
-                    .add(Restrictions.eq("title", title))
+                    .add(Restrictions.eq("id", id)) // changing the search criteria to id field
                     .uniqueResult();
             Hibernate.initialize(image.getTags()); // doing a join on tags table
             Hibernate.initialize(image.getUser()); // doing a join on user table
