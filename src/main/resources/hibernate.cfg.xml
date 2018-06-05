@@ -20,5 +20,6 @@
         <mapping class="com.upgrad.ImageHoster.model.Image" />
         <mapping class="com.upgrad.ImageHoster.model.Tag" />
         <mapping class="com.upgrad.ImageHoster.model.ProfilePhoto" />
+        <mapping class="com.upgrad.ImageHoster.model.Comment" />
     </session-factory>
 </hibernate-configuration>
