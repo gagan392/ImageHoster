@@ -12,8 +12,10 @@
             </a>
             <div class="dtc v-mid w-75 tr">
                 <div th:if="${session.currUser}">
-                    <a class="black link pointer f6 f5-l dib mr3 mr4-l" th:href="'/images/' + ${image.title} + '/edit'" title="Edit">Edit</a>
-                    <a class="red link pointer f6 f5-l dib mr3 mr4-l" th:href="'/images/' + ${image.title} + '/delete'" title="Delete">Delete</a>
+                    <!-- passing id instead of title of an image to edit it-->
+                    <a class="black link pointer f6 f5-l dib mr3 mr4-l" th:href="'/images/' + ${image.id} + '/edit'" title="Edit">Edit</a>
+                    <!-- passing id instead of title of an image to delete it-->
+                    <a class="red link pointer f6 f5-l dib mr3 mr4-l" th:href="'/images/' + ${image.id} + '/delete'" title="Delete">Delete</a>
                     <a class="b f6 link dim ph3 pv2 mb2 dib white bg-black" href="/images/upload" title="Upload">Upload Image</a>
                 </div>
                 <div th:unless="${session.currUser}">
@@ -45,7 +47,8 @@
                 </li>
             </ul>
             <h5 class="f4 mb0 underline">Comments</h5>
-            <form method="POST" enctype="multipart/form-data" th:action="'/image/'+${image.title}+'/comments/create'" th:if="${session.currUser}">
+            <!-- passing id instead of title of an image to create comment wrote on that image -->
+            <form method="POST" enctype="multipart/form-data" th:action="'/image/'+${image.id}+'/comments/create'" th:if="${session.currUser}">
                 <fieldset id="sign_up" class="ba b--transparent ph0 mh0">
                     <div class="mt3">
                         <label class="db fw6 lh-copy f6" for="comment">Write a comment</label>
