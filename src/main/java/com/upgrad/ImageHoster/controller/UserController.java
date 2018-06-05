@@ -2,6 +2,7 @@ package com.upgrad.ImageHoster.controller;
 
 
 import com.google.common.hash.Hashing;
+import com.upgrad.ImageHoster.common.Constants;
 import com.upgrad.ImageHoster.model.ProfilePhoto;
 import com.upgrad.ImageHoster.model.User;
 import com.upgrad.ImageHoster.service.ProfilePhotoService;
@@ -15,8 +16,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
-import java.io.*;
+import java.io.IOException;
 import java.util.Base64;
+import java.util.HashMap;
 
 
 @Controller
@@ -38,7 +40,7 @@ public class UserController {
     @RequestMapping(value = "/signup")
     public String signUp(HttpSession session) {
         // If the user is not logged in, render the user sign up view
-        if (session.getAttribute("currUser") == null){
+        if (session.getAttribute("currUser") == null) {
             return "users/signup";
         } else {
             // return the user to the home page if the user has signed in
@@ -51,14 +53,39 @@ public class UserController {
      *
      * @param username the username for the created user
      * @param password the password for the created user
-     * @param session HTTP session for us to store the created user
+     * @param session  HTTP session for us to store the created user
      *
      * @return redircts to the homepage view
      */
     @RequestMapping(value = "/signup", method = RequestMethod.POST)
     public String signUpUser(@RequestParam("username") String username,
                              @RequestParam("password") String password,
-                               HttpSession session) {
+                             Model model,
+                             HttpSession session) {
+
+        // Validations on username and password fields
+        // Both fields should have 6 characters or longer
+        // Constants class is used to centralize the useful(error/success) messages that are sent to user.
+        // So that in future, if any modifications are needed, changes at one would reflect across application wherever the variable are used.
+        if (username.length() < 6 || password.length() < 6) {
+            HashMap<String, String> errors = new HashMap<>();
+            if (username.length() < 6)
+                errors.put("username", Constants.SIGNUP_CHAR_LENGTH_ERROR);
+            if (password.length() < 6)
+                errors.put("password", Constants.SIGNUP_CHAR_LENGTH_ERROR);
+            model.addAttribute("errors", errors);
+
+            return "users/signup";
+        }
+        // A new user cannot register using the an username that has been taken by another user
+        else if (userService.getByName(username) != null) {
+            HashMap<String, String> errors = new HashMap<>();
+            errors.put("username", Constants.SIGNUP_DUPLICATE_USER_ERROR);
+            model.addAttribute("errors", errors);
+
+            return "users/signup";
+        }
+
         // We'll first assign a default photo to the user
         ProfilePhoto photo = new ProfilePhoto();
         profilePhotoService.save(photo);
@@ -81,12 +108,13 @@ public class UserController {
      * This method render the user signin form
      *
      * @param session HTTP session to check if the user has logged in
+     *
      * @return
      */
     @RequestMapping(value = "/signin")
     public String signIn(HttpSession session) {
         // render the sign in view on only if the user is not logged in
-        if (session.getAttribute("currUser") == null){
+        if (session.getAttribute("currUser") == null) {
             return "users/signin";
         } else {
             return "redirect:/";
@@ -95,12 +123,13 @@ public class UserController {
 
     /**
      * The controller method logs in an user
+     *
      * @param username the username of the user
      * @param password the password of the user
-     * @param model used to pass data to the view for rendering. In this case,
-     *              the model is used to pass errors back to the sign in view
-     *              if there are errors
-     * @param session HTTP session to store the signed in user
+     * @param model    used to pass data to the view for rendering. In this case,
+     *                 the model is used to pass errors back to the sign in view
+     *                 if there are errors
+     * @param session  HTTP session to store the signed in user
      *
      * @return the homepage view if signed in or the sign in view otherwise
      */
@@ -113,7 +142,7 @@ public class UserController {
         // username and password
         User user = userService.login(username, password);
 
-        if (user != null ) {
+        if (user != null) {
             session.setAttribute("currUser", user);
             return "redirect:/";
         } else {
@@ -145,18 +174,17 @@ public class UserController {
      * This controller method renders the user edit view
      *
      * @param session the HTTP session that tells us if the user is signed in
-     * @param model used to pass data to the view for rendering
+     * @param model   used to pass data to the view for rendering
      *
      * @return the user profile edit view
      */
     @RequestMapping(value = "/user/edit_profile")
     public String editProfile(HttpSession session, Model model) {
-        User currUser = (User)session.getAttribute("currUser");
+        User currUser = (User) session.getAttribute("currUser");
 
-        if(currUser == null ){
+        if (currUser == null) {
             return "redirect:/";
-        }
-        else {
+        } else {
             model.addAttribute("user", currUser);
             return "users/profile.html";
         }
@@ -166,9 +194,9 @@ public class UserController {
      * This controller method updates the user's profile
      *
      * @param description the updated description for the user
-     * @param file the user profile image
-     * @param session HTTP session
-
+     * @param file        the user profile image
+     * @param session     HTTP session
+     *
      * @return redirect to the home page
      *
      * @throws IOException
@@ -177,7 +205,7 @@ public class UserController {
     public String editUserProfile(@RequestParam("description") String description,
                                   @RequestParam("file") MultipartFile file,
                                   HttpSession session) throws IOException {
-        User currUser = (User)session.getAttribute("currUser");
+        User currUser = (User) session.getAttribute("currUser");
 
         // update photo data
         ProfilePhoto photo = currUser.getProfilePhoto();
